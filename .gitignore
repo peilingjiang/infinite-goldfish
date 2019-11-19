@@ -1,0 +1,6 @@
+venv/
+.idea/
+credentials.json
+client_id.json
+token.pickle
+__pycache__/
