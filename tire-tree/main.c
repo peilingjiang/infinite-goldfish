@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <assert.h>
 
 #define ARRAY_SIZE(a) sizeof(a)/sizeof(a[0])
 #define ALPHABET_SIZE (26)
@@ -37,9 +38,8 @@ struct TrieNode* getNode(void)
 
 // If not present, inserts key into trie
 // If the key is prefix of trie node, just marks leaf node
-void insert(struct TrieNode* root, const char* key)
+void insert(struct TrieNode* root, char* key)
 {
-
     int level;
     int length = strlen(key);
     int index;
@@ -53,112 +53,142 @@ void insert(struct TrieNode* root, const char* key)
 
         pCrawl = pCrawl->children[index];
     }
-
-    // mark last node as leaf
     pCrawl->isEndOfWord = true;
 }
 
 void insert_file(char* input_file_name, struct TrieNode* root)
 {
     FILE* fptr = fopen(input_file_name, "r");
+    if(!fptr) assert("dictionary not valid");
     while (!feof(fptr))
     {
-        int size = 1;
         char ch = fgetc(fptr);
-        char* ptr = (char*)malloc(sizeof(char) * size);
-        for (; ch != '\n'; )
+        char* ptr = (char*)malloc(sizeof(char));
+        int i = 0;
+
+        for (;!feof(fptr)&&ch!='\n' ;i ++ )
         {
-            ptr[size] = ch;
-            size++;
-            ptr = (char*)realloc(ptr, sizeof(char) * size);
+            ptr = (char*)realloc(ptr, sizeof(char) * (i+1));
+            ptr[i] = ch;
             ch = fgetc(fptr);
         }
+        printf("insert: %s\n",ptr);
         insert(root, ptr);
+        for(int j = 0; j <= i; j ++)
+        {
+            ptr[j] = 0;
+        }
         free(ptr);
     }
     fclose(fptr);
 }
 
-// Returns true if key presents in trie, else false
+bool testTree(struct TrieNode *root, const char *key)
+{
+    int level;
+    int length = strlen(key);
+    int index;
+    struct TrieNode *pCrawl = root;
+
+    for (level = 0; level < length; level++)
+    {
+        index = CHAR_TO_INDEX(key[level]);
+
+        if (!pCrawl->children[index])
+            return false;
+
+        pCrawl = pCrawl->children[index];
+    }
+
+    return (pCrawl != NULL && pCrawl->isEndOfWord);
+}
+
 void search(struct TrieNode* root, char* input_file_name, char* output_file_name )
 {
     FILE* ifptr = fopen(input_file_name, "r");
     FILE* ofptr = fopen(output_file_name, "w");
     char ch = fgetc(ifptr);
-    int wordLength = 0;
-    int pLength = 0;
+    int pLength = -1;
     char* buffer = (char*)malloc(sizeof(char) * 45);
+    for(int i = 0; i < 45; i ++) buffer[i] = 0;
     int index = CHAR_TO_INDEX(ch);
+    struct TrieNode* pCrawl;
+
     while (!feof(ifptr))
     {
+        int wordLength = 0;
         int length = 0;
         bool isWord = false;
-        struct TrieNode* pCrawl = root;
-        if (!pCrawl->children[index])
+        pCrawl = root;
+
+        while(pCrawl->children[index])
         {
-            buffer[length] = ch;
+            pCrawl = pCrawl->children[index];
+            if (pLength >= length)
+            {
+                index = CHAR_TO_INDEX(buffer[length]);
+            }
+            else
+            {
+                if(!feof(ifptr)){
+                    buffer[length] = ch;
+                    ch = fgetc(ifptr);
+                    index = CHAR_TO_INDEX(ch);
+                }
+                else break;
+            }
+
             if (pCrawl->isEndOfWord)
             {
                 isWord = true;
                 wordLength = length;
             }
-            length++;
-            pCrawl = pCrawl->children[index];
-            if (pLength >= length) index = CHAR_TO_INDEX(buffer[length]);
-            else ch = fgetc(ifptr);
+                length++;
         }
-        else
-        {
+        length --;
             if (isWord)
             {
                 fprintf(ofptr, "%s", "**");
-                for (int i = 0; i < wordLength; i++)
+                for (int i = 0; i <= wordLength; i++)
                 {
                     fprintf(ofptr, "%c", buffer[i]);
                 }
                 fprintf(ofptr, "%s", "**");
                 for (int i = 0; i < (length - wordLength); i++) {
-                    buffer[i] = buffer[wordLength + i];
+                    buffer[i] = buffer[wordLength + i + 1];
                 }
-                pLength = length;
             }
             else
             {
-                for (int i = 0; i < length; i++)
+                wordLength = 0;
+                fprintf(ofptr, "%c", buffer[0]);
+                if(length>0)
                 {
-                    fprintf(ofptr, "%c", buffer[i]);
-                    buffer[i] = 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        buffer[i] = buffer[i+1];
+                    }
                 }
-                pLength = 0;
             }
-        }
+        pLength = length - wordLength - 1;
     }
     fclose(ifptr);
     fclose(ofptr);
 }
 
-// Driver
-int main()
+int main(int argc, char** argv)
 {
-    // Input keys (use only 'a' through 'z' and lower case)
-    char keys[][8] = { "the", "a", "there", "answer", "any",
-                       "by", "bye", "their" };
-
-    char output[][32] = { "Not present in trie", "Present in trie" };
-
+    //use command ./main.c dictionary.txt input.txt output.txt
+//    if(argc == 3){
+//        struct TrieNode* root = getNode();
+//        insert_file(argv[1],root);
+//        search(root,argv[2],argv[3]);
+//    }
 
     struct TrieNode* root = getNode();
-
-    // Construct trie
-    int i;
-    for (i = 0; i < ARRAY_SIZE(keys); i++)
-        insert(root, keys[i]);
-
-    // Search for different keys
-    //printf("%s --- %s\n", "the", output[search(root, "the")]);
-    //printf("%s --- %s\n", "these", output[search(root, "these")]);
-    //printf("%s --- %s\n", "their", output[search(root, "their")]);
-    //printf("%s --- %s\n", "thaw", output[search(root, "thaw")]);
-
+    insert_file("/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/dictionary.txt",root);
+//    char output[][32] = {"Not present in trie", "Present in trie"};
+//    printf("%s --- %s\n", "baby", output[testTree(root, "baby")] );
+    search(root,"/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/input.txt","output.txt");
     return 0;
 }
