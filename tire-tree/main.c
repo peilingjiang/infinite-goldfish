@@ -120,9 +120,11 @@ void search(struct TrieNode* root, char* input_file_name, char* output_file_name
         int length = 0;
         bool isWord = false;
         pCrawl = root;
+        bool onceIn = false;
 
         while(pCrawl->children[index])
         {
+            onceIn = true;
             pCrawl = pCrawl->children[index];
             if (pLength >= length)
             {
@@ -148,26 +150,37 @@ void search(struct TrieNode* root, char* input_file_name, char* output_file_name
         length --;
             if (isWord)
             {
-                fprintf(ofptr, "%s", "**");
+                fprintf(ofptr, "%s", " **");
                 for (int i = 0; i <= wordLength; i++)
                 {
                     fprintf(ofptr, "%c", buffer[i]);
                 }
-                fprintf(ofptr, "%s", "**");
+                fprintf(ofptr, "%s", "** ");
                 for (int i = 0; i < (length - wordLength); i++) {
                     buffer[i] = buffer[wordLength + i + 1];
                 }
             }
             else
             {
-                wordLength = 0;
-                fprintf(ofptr, "%c", buffer[0]);
-                if(length>0)
+                if(onceIn)
                 {
-                    for (int i = 0; i < length; i++)
+                    wordLength = 0;
+                    fprintf(ofptr, "%c", buffer[0]);
+                    if(length>0)
                     {
-                        buffer[i] = buffer[i+1];
+                        for (int i = 0; i < length; i++)
+                        {
+                            buffer[i] = buffer[i+1];
+                        }
                     }
+                }
+                else
+                {
+                    length = 0;
+                    wordLength = 0;
+                    fprintf(ofptr, "%c", (char)index);
+                    ch = fgetc(ifptr);
+                    index = CHAR_TO_INDEX(ch);
                 }
             }
         pLength = length - wordLength - 1;
@@ -186,7 +199,7 @@ int main(int argc, char** argv)
 //    }
 
     struct TrieNode* root = getNode();
-    insert_file("/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/dictionary.txt",root);
+    insert_file("/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/words_alpha.txt",root);
 //    char output[][32] = {"Not present in trie", "Present in trie"};
 //    printf("%s --- %s\n", "baby", output[testTree(root, "baby")] );
     search(root,"/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/input.txt","output.txt");
