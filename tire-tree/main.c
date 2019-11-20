@@ -72,7 +72,7 @@ void insert_file(char* input_file_name, struct TrieNode* root)
             ptr[i] = ch;
             ch = fgetc(fptr);
         }
-        printf("insert: %s\n",ptr);
+       // printf("insert: %s\n",ptr);
         insert(root, ptr);
         for(int j = 0; j <= i; j ++)
         {
@@ -194,14 +194,15 @@ int main(int argc, char** argv)
     //use command ./main.c dictionary.txt input.txt output.txt
 //    if(argc == 3){
 //        struct TrieNode* root = getNode();
-//        insert_file(argv[1],root);
-//        search(root,argv[2],argv[3]);
-//    }
+//        insert_file(argv[2],root);
+//        search(root,argv[4],argv[6]);
+////    }
 
-    struct TrieNode* root = getNode();
-    insert_file("/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/words_alpha.txt",root);
+//    struct TrieNode* root = getNode();
+//    insert_file("/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/dictionary.txt",root);
 //    char output[][32] = {"Not present in trie", "Present in trie"};
-//    printf("%s --- %s\n", "baby", output[testTree(root, "baby")] );
-    search(root,"/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/input.txt","output.txt");
+//    printf("%s --- %s\n", "orange", output[testTree(root, "orange")] );
+printf("djkns");
+//    search(root,"/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/input.txt","output.txt");
     return 0;
 }
