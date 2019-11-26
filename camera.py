@@ -127,6 +127,7 @@ if __name__ == 'main':
     num = start_num
     nowStop = ''
     blobs = set()
+    last_letter = ''
 
     camera = PiCamera()
 
@@ -138,14 +139,17 @@ if __name__ == 'main':
         # Take a photo
         camera.capture(f_path)
         camera.stop_preview()
-        # Upload file to Google Drive
-        drive.upload(f_name, f_path, 'image/jpeg')
 
         # Analyze the photo
         letter = analyze(f_path)
         # Write letter to file
         # TODO: Display on the screen
-        write(letter)
+        if letter and letter != last_letter:
+            # Upload file to Google Drive
+            # Only write the letter and upload the photo when location changes
+            drive.upload(f_name, f_path, 'image/jpeg')
+            write(letter)
+            last_letter = letter
 
         sleep(photo_freq - light_sensing - wait_gap - 1)  # Take one photo every minute
 
