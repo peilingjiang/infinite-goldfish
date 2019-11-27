@@ -6,16 +6,6 @@ default_target: all
 
 .PHONY : default_target
 
-# The main recursive all target
-all:
-
-.PHONY : all
-
-# The main recursive preinstall target
-preinstall:
-
-.PHONY : preinstall
-
 #=============================================================================
 # Special targets provided by cmake.
 
@@ -45,10 +35,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.4/bin/cmake
+CMAKE_COMMAND = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /usr/local/Cellar/cmake/3.15.4/bin/cmake -E remove -f
+RM = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -62,10 +52,20 @@ CMAKE_BINARY_DIR = /Users/wangkeru/Desktop/infinite-goldfish/tire-tree
 #=============================================================================
 # Directory level rules for the build root directory
 
+# The main recursive "all" target.
+all: CMakeFiles/tire_tree.dir/all
+
+.PHONY : all
+
 # The main recursive "clean" target.
 clean: CMakeFiles/tire_tree.dir/clean
 
 .PHONY : clean
+
+# The main recursive "preinstall" target.
+preinstall:
+
+.PHONY : preinstall
 
 #=============================================================================
 # Target rules for target CMakeFiles/tire_tree.dir
@@ -76,11 +76,6 @@ CMakeFiles/tire_tree.dir/all:
 	$(MAKE) -f CMakeFiles/tire_tree.dir/build.make CMakeFiles/tire_tree.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/CMakeFiles --progress-num=1,2 "Built target tire_tree"
 .PHONY : CMakeFiles/tire_tree.dir/all
-
-# Include target in all.
-all: CMakeFiles/tire_tree.dir/all
-
-.PHONY : all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/tire_tree.dir/rule: cmake_check_build_system
