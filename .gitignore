@@ -4,3 +4,4 @@ credentials.json
 client_id.json
 token.pickle
 __pycache__/
+.DS_Store
