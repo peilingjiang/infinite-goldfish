@@ -20,7 +20,7 @@ wait_gap = 2
 
 # Set to the current first photo
 start_num = 1
-target_color_1 = {(250, 50, 50), (200, 60, 60)}
+target_color_1 = {(102, 48, 38)}
 
 
 def interrupted(signum, frame):
@@ -71,7 +71,8 @@ def color_distance(c1, c2):
 
 def if_color_targeted(c, target_set):
     for t in target_set:
-        if color_distance(c, t) < 50:
+        if color_distance(c, t) < 8:
+            # print('COLOR')
             return True
     return False
 
@@ -106,7 +107,7 @@ def location_to_letter(location):
 
 
 def analyze(file_path, n):
-    if os.path.exists(f_path):
+    if os.path.exists(file_path):
         with open(file_path, 'rb') as img_handle:
             img = PILImage.open(img_handle)
             w0, h0 = img.size  # The original width and height of the image
@@ -122,13 +123,14 @@ def analyze(file_path, n):
                 raise ValueError('Unsupported image mode: %r' % img.mode)
             w, h = img.size
             new_file_path = 'crop_' + file_path
-            new_file_name = new_f_path.split('/')[-1]
-            img.save(new_f_path)
+            new_file_name = new_file_path.split('/')[-1]
+            img.save(new_file_path)
         mid_point = find_blob(pixels, w, h)
         if not mid_point:
             # mid_point is None
             return None, new_file_name, new_file_path
         else:
+            # print(mid_point)
             return location_to_letter(mid_point), new_file_name, new_file_path
     else:
         print("PATH NOT EXISTS ERROR (analyze)")
@@ -189,3 +191,5 @@ if __name__ == '__main__':
         num += 1
 
     print('Finished')
+
+    # analyze('fish-in-tank.jpg', 1)
