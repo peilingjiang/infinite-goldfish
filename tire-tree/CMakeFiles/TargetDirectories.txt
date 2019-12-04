@@ -1,3 +1,0 @@
-/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/CMakeFiles/rebuild_cache.dir
-/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/CMakeFiles/edit_cache.dir
-/Users/wangkeru/Desktop/infinite-goldfish/tire-tree/CMakeFiles/tire_tree.dir
