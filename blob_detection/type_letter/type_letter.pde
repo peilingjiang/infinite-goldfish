@@ -1,33 +1,67 @@
 import processing.video.*;
 
 Movie movie;
-int count = 0;
 color trackColor; 
 float threshold = 20;
 float distThreshold = 50;
+int xPadding;
+int yPadding;
 
 ArrayList<Blob> blobs = new ArrayList<Blob>();
+StringList letters = new StringList();//26*26
+char[][] letterTable = new char[26][26];
+
+void initialTable(StringList letters) {
+  for (char i = 65; i < 91; i ++) {
+    for (char j = 0; j < 26; j ++) {
+      String s = Character.toString(i);
+      letters.append(s);
+    }
+  }
+  for (char x = 0; x < 26; x ++) {
+    for (char y = 0; y < 26; y ++) {
+      int whichLetter = int(random(letters.size()));
+      letterTable[x][y] = letters.get(whichLetter).charAt(0);
+      letters.remove(whichLetter);
+    }
+  }
+}
+
 
 void setup() {
   background(255);
-  size(640, 720);
+  size(640, 360);
+  xPadding = width/26;
+  yPadding = height/26;
   movie = new Movie(this, "goldfish.mov");
   movie.play();
   trackColor = color(255, 0, 0);
+  initialTable(letters);
 }
 
-void movieEvent(Movie movie){
+void drawTable() {
+  for (char x = 0; x < 26; x ++) {
+    for (char y = 0; y < 26; y ++) {
+      for (char z = 0; z < 26; z ++) {
+        textAlign(CENTER);
+        fill(150);
+        textSize(15);
+        text(letterTable[x][y], (0.5 + x)*xPadding, (0.5 + y)*yPadding + 5 );
+      }
+    }
+  }
+}
+
+void movieEvent(Movie movie) {
   movie.read();
 }
 
 void draw() {
- count++;
- fill(255,50);
- rect(0, 360, width, height);
+  background(255);
   movie.loadPixels();
   movie.filter(GRAY);
-  image(movie, 0, 0,width,height/2);
-
+   tint(255, 50);
+  image(movie, 0, 0,width,height);
   blobs.clear();
 
   // Begin loop to walk through every pixel
@@ -63,19 +97,19 @@ void draw() {
     }
   }
 
-  for (Blob b : blobs) {
-    if (b.size() > 500) {
-      b.show();
+    for (Blob b : blobs) {
+      if (b.size() > 500) {
+        b.show();
+        noStroke();
+        fill(200, 50, 50, 50);
+        int x = floor(b.returnx()/26)*xPadding;
+        int y = floor(b.returny()/26)*yPadding;
+        rect(x, y, xPadding, yPadding);
+      }
     }
-    if(count%30==0){
-      textAlign(CENTER);
-       fill(0);
-       textSize(30);
-      text("A", b.returnx(), 360 + b.returny());
-      count = 0;
-    }
-  }
+  drawTable();
 }
+
 
 
 // Custom distance functions w/ no square root for optimization

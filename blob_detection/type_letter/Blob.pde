@@ -1,9 +1,4 @@
-// Daniel Shiffman
-// http://codingtra.in
-// http://patreon.com/codingtrain
-// Code for: https://youtu.be/1scFcY-xMrI
 int xwidth = 4;
-
 class Blob {
   float minx;
   float miny;
@@ -20,21 +15,21 @@ class Blob {
     points = new ArrayList<PVector>();
     points.add(new PVector(x, y));
   }
-
-  void show() {
+ 
+ void show() {
     stroke(255);
-    fill(200, 50, 50, 50);
+    noFill();
+    //fill(200, 50, 50, 50);
     strokeWeight(2);
     rectMode(CORNERS);
     rect(minx, miny, maxx, maxy);
     line(((minx + maxx)/2) - xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) + xwidth,((miny + maxy)/2) + xwidth);
-   line(((minx + maxx)/2) + xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) - xwidth,((miny + maxy)/2) + xwidth);
+    line(((minx + maxx)/2) + xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) - xwidth,((miny + maxy)/2) + xwidth);
     //for (PVector v : points) {
     //  stroke(200, 50, 50);
     //  point(v.x, v.y + 360);
     //}
   }
- 
  
  float returnx(){
    return (minx + maxx)/2;
@@ -57,7 +52,6 @@ class Blob {
   }
 
   boolean isNear(float x, float y) {
-    // Closest point in blob strategy
     float d = 10000000;
     for (PVector v : points) {
       float tempD = distSq(x, y, v.x, v.y);
