@@ -2,6 +2,7 @@
 // http://codingtra.in
 // http://patreon.com/codingtrain
 // Code for: https://youtu.be/1scFcY-xMrI
+int xwidth = 4;
 
 class Blob {
   float minx;
@@ -21,15 +22,17 @@ class Blob {
   }
 
   void show() {
-    //stroke(0);
-    //fill(255);
-    //strokeWeight(2);
-    //rectMode(CORNERS);
-    //rect(minx, miny, maxx, maxy);
-    for (PVector v : points) {
-      stroke(200, 50, 50);
-      point(v.x, v.y + 360);
-    }
+    stroke(255);
+    fill(200, 50, 50, 50);
+    strokeWeight(2);
+    rectMode(CORNERS);
+    rect(minx, miny, maxx, maxy);
+    line(((minx + maxx)/2) - xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) + xwidth,((miny + maxy)/2) + xwidth);
+   line(((minx + maxx)/2) + xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) - xwidth,((miny + maxy)/2) + xwidth);
+    //for (PVector v : points) {
+    //  stroke(200, 50, 50);
+    //  point(v.x, v.y + 360);
+    //}
   }
  
  
@@ -54,12 +57,6 @@ class Blob {
   }
 
   boolean isNear(float x, float y) {
-
-    // The Rectangle "clamping" strategy
-    // float cx = max(min(x, maxx), minx);
-    // float cy = max(min(y, maxy), miny);
-    // float d = distSq(cx, cy, x, y);
-
     // Closest point in blob strategy
     float d = 10000000;
     for (PVector v : points) {

@@ -1,10 +1,9 @@
 import processing.video.*;
 
-//Capture video;
 Movie movie;
-
+int count = 0;
 color trackColor; 
-float threshold = 50;
+float threshold = 20;
 float distThreshold = 50;
 
 ArrayList<Blob> blobs = new ArrayList<Blob>();
@@ -12,10 +11,6 @@ ArrayList<Blob> blobs = new ArrayList<Blob>();
 void setup() {
   background(255);
   size(640, 720);
-  //String[] cameras = Capture.list();
-  //printArray(cameras);
-  //video = new Capture(this, 640, 360);
-  //video.start();
   movie = new Movie(this, "goldfish.mov");
   movie.play();
   trackColor = color(255, 0, 0);
@@ -26,9 +21,11 @@ void movieEvent(Movie movie){
 }
 
 void draw() {
+ count++;
  fill(255,50);
  rect(0, 360, width, height);
   movie.loadPixels();
+  movie.filter(GRAY);
   image(movie, 0, 0,width,height/2);
 
   blobs.clear();
@@ -49,7 +46,6 @@ void draw() {
       float d = distSq(r1, g1, b1, r2, g2, b2); 
 
       if (d < threshold*threshold) {
-
         boolean found = false;
         for (Blob b : blobs) {
           if (b.isNear(x, y)) {
@@ -71,11 +67,12 @@ void draw() {
     if (b.size() > 500) {
       b.show();
     }
-    if(frameCount%30==0){
+    if(count%30==0){
       textAlign(CENTER);
        fill(0);
        textSize(30);
       text("A", b.returnx(), 360 + b.returny());
+      count = 0;
     }
   }
 }
