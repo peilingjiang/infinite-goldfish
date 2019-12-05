@@ -4,8 +4,8 @@ Movie movie;
 color trackColor; 
 float threshold = 20;
 float distThreshold = 50;
-int xPadding;
-int yPadding;
+float xPadding;
+float yPadding;
 
 ArrayList<Blob> blobs = new ArrayList<Blob>();
 StringList letters = new StringList();//26*26
@@ -30,12 +30,12 @@ void initialTable(StringList letters) {
 
 void setup() {
   background(255);
-  size(640, 360);
+  size(700, 700);
   xPadding = width/26;
   yPadding = height/26;
-  movie = new Movie(this, "goldfish.mov");
-  movie.play();
-  trackColor = color(255, 0, 0);
+  movie = new Movie(this, "goldfish.mp4");
+  movie.loop();
+  trackColor = color(10);
   initialTable(letters);
 }
 
@@ -44,7 +44,7 @@ void drawTable() {
     for (char y = 0; y < 26; y ++) {
       for (char z = 0; z < 26; z ++) {
         textAlign(CENTER);
-        fill(150);
+        fill(180);
         textSize(15);
         text(letterTable[x][y], (0.5 + x)*xPadding, (0.5 + y)*yPadding + 5 );
       }
@@ -54,13 +54,14 @@ void drawTable() {
 
 void movieEvent(Movie movie) {
   movie.read();
+  movie.loadPixels();
+  movie.filter(GRAY);
 }
 
 void draw() {
   background(255);
-  movie.loadPixels();
-  movie.filter(GRAY);
-   tint(255, 50);
+  
+  tint(255, 50);
   image(movie, 0, 0,width,height);
   blobs.clear();
 
@@ -96,18 +97,23 @@ void draw() {
       }
     }
   }
+   drawTable();
 
     for (Blob b : blobs) {
-      if (b.size() > 500) {
+      if (b.size() > 8000) {
         b.show();
         noStroke();
         fill(200, 50, 50, 50);
-        int x = floor(b.returnx()/26)*xPadding;
-        int y = floor(b.returny()/26)*yPadding;
-        rect(x, y, xPadding, yPadding);
+        int x = floor(b.returnx()/xPadding);
+        int y = floor(b.returny()/yPadding);
+        rectMode(CORNER);
+        rect(x*xPadding, y*yPadding, xPadding, yPadding);
+        textAlign(CENTER);
+        fill(80);
+        textSize(15);
+        text(letterTable[x][y], (0.5 + x)*xPadding, (0.5 + y)*yPadding + 5 );
       }
     }
-  drawTable();
 }
 
 
@@ -124,8 +130,8 @@ float distSq(float x1, float y1, float z1, float x2, float y2, float z2) {
   return d;
 }
 
-void mousePressed() {
-  // Save color where the mouse is clicked in trackColor variable
-  int loc = mouseX + mouseY*movie.width;
-  trackColor = movie.pixels[loc];
-}
+//void mousePressed() {
+//  // Save color where the mouse is clicked in trackColor variable
+//  int loc = mouseX + mouseY*movie.width;
+//  trackColor = movie.pixels[loc];
+//}

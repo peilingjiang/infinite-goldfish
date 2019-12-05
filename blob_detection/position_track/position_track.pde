@@ -9,20 +9,20 @@ ArrayList<Blob> blobs = new ArrayList<Blob>();
 
 void setup() {
   background(255);
-  size(640, 360);
-  movie = new Movie(this, "goldfish.mov");
-  movie.play();
-  trackColor = color(255, 0, 0);
+  size(700, 700);
+  movie = new Movie(this, "goldfish.mp4");
+  movie.loop();
+  trackColor = color(10);
 }
 
 void movieEvent(Movie movie){
   movie.read();
+  movie.filter(GRAY);
   movie.loadPixels();
 }
 
 void draw() {
   fill(255,50);
-  movie.filter(GRAY);
   image(movie, 0, 0,width,height);
   blobs.clear();
 
@@ -58,9 +58,9 @@ void draw() {
       }
     }
   }
-
+ 
   for (Blob b : blobs) {
-    if (b.size() > 500) {
+    if (b.size() > 8000) {
       b.show();
     }
   }
@@ -79,8 +79,8 @@ float distSq(float x1, float y1, float z1, float x2, float y2, float z2) {
   return d;
 }
 
-void mousePressed() {
-  // Save color where the mouse is clicked in trackColor variable
-  int loc = mouseX + mouseY*movie.width;
-  trackColor = movie.pixels[loc];
-}
+//void mousePressed() {
+//  // Save color where the mouse is clicked in trackColor variable
+//  int loc = mouseX + mouseY*movie.width;
+//  trackColor = movie.pixels[loc];
+//}

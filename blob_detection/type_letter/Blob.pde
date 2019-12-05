@@ -17,14 +17,16 @@ class Blob {
   }
  
  void show() {
-    stroke(255);
+    stroke(200);
     noFill();
     //fill(200, 50, 50, 50);
     strokeWeight(2);
     rectMode(CORNERS);
     rect(minx, miny, maxx, maxy);
-    line(((minx + maxx)/2) - xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) + xwidth,((miny + maxy)/2) + xwidth);
-    line(((minx + maxx)/2) + xwidth,((miny + maxy)/2) - xwidth,((minx + maxx)/2) - xwidth,((miny + maxy)/2) + xwidth);
+    float pointX = this.returnx();
+    float pointY = this.returny();
+    line(pointX - xwidth, pointY - xwidth, pointX + xwidth, pointY + xwidth);
+    line(pointX + xwidth, pointY - xwidth, pointX - xwidth, pointY + xwidth);
     //for (PVector v : points) {
     //  stroke(200, 50, 50);
     //  point(v.x, v.y + 360);
