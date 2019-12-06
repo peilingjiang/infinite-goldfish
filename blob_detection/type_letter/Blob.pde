@@ -22,15 +22,18 @@ class Blob {
     //fill(200, 50, 50, 50);
     strokeWeight(2);
     rectMode(CORNERS);
-    rect(minx, miny, maxx, maxy);
-    float pointX = this.returnx();
-    float pointY = this.returny();
-    line(pointX - xwidth, pointY - xwidth, pointX + xwidth, pointY + xwidth);
-    line(pointX + xwidth, pointY - xwidth, pointX - xwidth, pointY + xwidth);
-    //for (PVector v : points) {
-    //  stroke(200, 50, 50);
-    //  point(v.x, v.y + 360);
-    //}
+    //rect(minx, miny, maxx, maxy);
+    //float pointX = this.returnx();
+    //float pointY = this.returny();
+    //noStroke();
+    //fill(200, 50, 50, 50);
+    //ellipse(pointX,pointY,10,10);
+    //line(pointX - xwidth, pointY - xwidth, pointX + xwidth, pointY + xwidth);
+    //line(pointX + xwidth, pointY - xwidth, pointX - xwidth, pointY + xwidth);
+    for (PVector v : points) {
+      stroke(200, 50, 50, 5);
+      point(v.x, v.y);
+    }
   }
  
  float returnx(){

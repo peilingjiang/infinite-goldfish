@@ -2,7 +2,7 @@ import processing.video.*;
 
 Movie movie;
 color trackColor; 
-float threshold = 20;
+float threshold = 45;
 float distThreshold = 50;
 float xPadding;
 float yPadding;
@@ -34,7 +34,7 @@ void setup() {
   xPadding = width/26;
   yPadding = height/26;
   movie = new Movie(this, "goldfish.mp4");
-  movie.loop();
+  movie.play();
   trackColor = color(10);
   initialTable(letters);
 }
@@ -59,10 +59,10 @@ void movieEvent(Movie movie) {
 }
 
 void draw() {
-  background(255);
+  //background(255);
   
-  tint(255, 50);
-  image(movie, 0, 0,width,height);
+  //tint(255, 50);
+  //image(movie, 0, 0,width,height);
   blobs.clear();
 
   // Begin loop to walk through every pixel
@@ -97,7 +97,7 @@ void draw() {
       }
     }
   }
-   drawTable();
+   //drawTable();
 
     for (Blob b : blobs) {
       if (b.size() > 8000) {
@@ -107,9 +107,9 @@ void draw() {
         int x = floor(b.returnx()/xPadding);
         int y = floor(b.returny()/yPadding);
         rectMode(CORNER);
-        rect(x*xPadding, y*yPadding, xPadding, yPadding);
+        //rect(x*xPadding, y*yPadding, xPadding, yPadding);
         textAlign(CENTER);
-        fill(80);
+        fill(30);
         textSize(15);
         text(letterTable[x][y], (0.5 + x)*xPadding, (0.5 + y)*yPadding + 5 );
       }
